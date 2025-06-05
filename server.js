@@ -4,11 +4,13 @@ const { Configuration, OpenAIApi } = require("openai");
 require("dotenv").config();
 
 const app = express();
-const openai = new OpenAIApi(new Configuration({
-  apiKey: process.env.OPENAI_API_KEY
-}));
-
 app.use(bodyParser.json({ limit: "10mb" }));
+
+const configuration = new Configuration({
+  apiKey: process.env.OPENAI_API_KEY
+});
+
+const openai = new OpenAIApi(configuration);
 
 app.post("/analyze", async (req, res) => {
   const html = req.body.html;
@@ -39,4 +41,5 @@ ${html}
   }
 });
 
-app.listen(3000, () => console.log("Server running on port 3000"));
+const port = process.env.PORT || 3000;
+app.listen(port, () => console.log(`Server running on port ${port}`));
