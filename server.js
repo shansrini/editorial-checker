@@ -1,16 +1,14 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const { Configuration, OpenAIApi } = require("openai");
+const OpenAI = require("openai");
 require("dotenv").config();
 
 const app = express();
 app.use(bodyParser.json({ limit: "10mb" }));
 
-const configuration = new Configuration({
+const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
 });
-
-const openai = new OpenAIApi(configuration);
 
 app.post("/analyze", async (req, res) => {
   const html = req.body.html;
@@ -30,13 +28,14 @@ ${html}
 `;
 
   try {
-    const response = await openai.createChatCompletion({
+    const response = await openai.chat.completions.create({
       model: "gpt-4o",
       messages: [{ role: "user", content: prompt }]
     });
 
-    res.json({ result: response.data.choices[0].message.content });
+    res.json({ result: response.choices[0].message.content });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: err.message });
   }
 });
