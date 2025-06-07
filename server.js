@@ -34,7 +34,7 @@ ${html}
       model: "gpt-4o",
       messages: [{ role: "user", content: prompt }]
     });
-
+    console.log("GPT RESPONSE:", response);
     res.json({ result: response.choices[0].message.content });
   } catch (err) {
     console.error(err);
